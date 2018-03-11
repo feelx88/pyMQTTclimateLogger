@@ -32,15 +32,18 @@ if __name__ == "__main__":
     si7021 = SI7021()
     si7021.read()
 
+    temperature = roundToPointFive(si7021.temperature) * 10
+    humidity = roundToPointFive(si7021.humidity) * 10
+
     last = ClimateData.select().order_by(ClimateData.timestamp.desc()).first()
 
-    if last and last.temperature == si7021.temperature and last.humidity == si7021.humidity:
+    if last and last.temperature == temperature and last.humidity == humidity:
         exit()
 
     current = ClimateData.create(
         timestamp=datetime.datetime.now(),
-        temperature=roundToPointFive(si7021.temperature),
-        humidity=roundToPointFive(si7021.humidity)
+        temperature=temperature,
+        humidity=humidity
     )
     current.save()
 
