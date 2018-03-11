@@ -32,6 +32,11 @@ if __name__ == "__main__":
     si7021 = SI7021()
     si7021.read()
 
+    last = ClimateData.select().order_by(ClimateData.timestamp.desc()).first()
+
+    if last.temperature == si7021.temperature and last.humidity == si7021.humidity:
+        exit()
+
     current = ClimateData.create(
         timestamp=datetime.datetime.now(),
         temperature=roundToPointFive(si7021.temperature),
