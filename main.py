@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
     last = ClimateData.select().order_by(ClimateData.timestamp.desc()).first()
 
-    if last.temperature == si7021.temperature and last.humidity == si7021.humidity:
+    if last and last.temperature == si7021.temperature and last.humidity == si7021.humidity:
         exit()
 
     current = ClimateData.create(
