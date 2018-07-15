@@ -33,7 +33,7 @@ if __name__ == "__main__":
     si7021.read()
 
     temperature = roundToPointFive(si7021.temperature) * 10
-    humidity = roundToPointFive(si7021.humidity) * 10
+    humidity = int(si7021.humidity) * 10
 
     last = ClimateData.select().order_by(ClimateData.timestamp.desc()).first()
 
