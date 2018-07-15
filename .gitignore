@@ -2,3 +2,4 @@ config.json
 __pychache__/
 *.pyc
 .vscode
+*.db
