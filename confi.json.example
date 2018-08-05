@@ -2,6 +2,7 @@
   "database": "climateData.db",
   "mqtt_current_topic": "/climatedata/0/current",
   "mqtt_month_topic": "/climatedata/0/month",
+  "mqtt_day_topic": "/climatedata/0/day",
   "mqtt_host": "localhost",
   "mqtt_port": "1883"
 }

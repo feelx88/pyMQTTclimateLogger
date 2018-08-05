@@ -67,3 +67,17 @@ if __name__ == "__main__":
                    hostname=config['mqtt_host'],
                    port=int(config['mqtt_port']),
                    retain=True)
+
+    day = datetime.datetime.now() - relativedelta.relativedelta(days=1)
+    query = ClimateData.select().where(ClimateData.timestamp >
+                                       day).order_by(ClimateData.id).execute()
+
+    day = []
+    for dataset in query:
+        day.append(model_to_dict(dataset))
+
+    publish.single(config['mqtt_day_topic'],
+                   payload=json.dumps(day, default=json_datetime),
+                   hostname=config['mqtt_host'],
+                   port=int(config['mqtt_port']),
+                   retain=True)
