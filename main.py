@@ -9,10 +9,6 @@ import json
 import math
 
 
-def roundToPointFive(number):
-    return round(number * 2) / 2
-
-
 def json_datetime(obj):
     if isinstance(obj, datetime.datetime):
         return obj.isoformat()
@@ -32,7 +28,7 @@ if __name__ == "__main__":
     si7021 = SI7021()
     si7021.read()
 
-    temperature = roundToPointFive(si7021.temperature) * 10
+    temperature = int(round(si7021.temperature)) * 10
     humidity = int(round(si7021.humidity / 10)) * 10 * 10
 
     last = ClimateData.select().order_by(ClimateData.timestamp.desc()).first()
