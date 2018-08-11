@@ -6,6 +6,7 @@
 
 import smbus
 import time
+import statistics
 
 
 class SI7021:
@@ -14,6 +15,19 @@ class SI7021:
     humidity = 0
 
     def read(self):
+        temperatures = []
+        humidities = []
+
+        for x in range(10):
+            t, h = self._readOne()
+            temperatures.append(t)
+            humidities.append(h)
+            time.sleep(0.1)
+
+        self.temperature = statistics.median(temperatures)
+        self.humidity = statistics.median(humidities)
+
+    def _readOne(self):
         # Get I2C bus
         bus = smbus.SMBus(1)
 
@@ -29,7 +43,7 @@ class SI7021:
         data1 = bus.read_byte(0x40)
 
         # Convert the data
-        self.humidity = ((data0 * 256 + data1) * 125 / 65536.0) - 6
+        humidity = ((data0 * 256 + data1) * 125 / 65536.0) - 6
 
         time.sleep(0.3)
 
@@ -45,4 +59,6 @@ class SI7021:
         data1 = bus.read_byte(0x40)
 
         # Convert the data
-        self.temperature = ((data0 * 256 + data1) * 175.72 / 65536.0) - 46.85
+        temperature = ((data0 * 256 + data1) * 175.72 / 65536.0) - 46.85
+
+        return [temperature, humidity]
