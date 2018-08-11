@@ -15,6 +15,14 @@ def json_datetime(obj):
     raise TypeError("Type %s not serializable" % type(obj))
 
 
+def mqttPublish(config, topicKey, payload):
+    publish.single(config[topicKey],
+                   payload=json.dumps(payload, default=json_datetime),
+                   hostname=config['mqtt_host'],
+                   port=int(config['mqtt_port']),
+                   retain=True)
+
+
 if __name__ == "__main__":
 
     config = json.load(open('config.json'))
@@ -43,12 +51,7 @@ if __name__ == "__main__":
     )
     current.save()
 
-    publish.single(config['mqtt_current_topic'],
-                   payload=json.dumps(model_to_dict(
-                       current), default=json_datetime),
-                   hostname=config['mqtt_host'],
-                   port=int(config['mqtt_port']),
-                   retain=True)
+    mqttPublish(config, 'mqtt_current_topic', model_to_dict(current))
 
     month = datetime.datetime.now() - relativedelta.relativedelta(months=1)
     query = ClimateData.select().where(ClimateData.timestamp >
@@ -58,11 +61,7 @@ if __name__ == "__main__":
     for dataset in query:
         month.append(model_to_dict(dataset))
 
-    publish.single(config['mqtt_month_topic'],
-                   payload=json.dumps(month, default=json_datetime),
-                   hostname=config['mqtt_host'],
-                   port=int(config['mqtt_port']),
-                   retain=True)
+    mqttPublish(config, 'mqtt_month_topic', month)
 
     day = datetime.datetime.now() - relativedelta.relativedelta(days=1)
     query = ClimateData.select().where(ClimateData.timestamp >
@@ -72,8 +71,4 @@ if __name__ == "__main__":
     for dataset in query:
         day.append(model_to_dict(dataset))
 
-    publish.single(config['mqtt_day_topic'],
-                   payload=json.dumps(day, default=json_datetime),
-                   hostname=config['mqtt_host'],
-                   port=int(config['mqtt_port']),
-                   retain=True)
+    mqttPublish(config, 'mqtt_day_topic', day)
