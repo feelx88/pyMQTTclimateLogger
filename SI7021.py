@@ -18,7 +18,7 @@ class SI7021:
         temperatures = []
         humidities = []
 
-        for x in range(10):
+        for _x in range(10):
             t, h = self._readOne()
             temperatures.append(t)
             humidities.append(h)
