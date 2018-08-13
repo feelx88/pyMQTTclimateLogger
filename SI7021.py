@@ -18,11 +18,11 @@ class SI7021:
         temperatures = []
         humidities = []
 
-        for _x in range(10):
+        for _x in range(5):
             t, h = self._readOne()
             temperatures.append(t)
             humidities.append(h)
-            time.sleep(0.1)
+            time.sleep(10)
 
         self.temperature = statistics.median(temperatures)
         self.humidity = statistics.median(humidities)
