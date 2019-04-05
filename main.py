@@ -44,6 +44,9 @@ if __name__ == "__main__":
     if last and last.temperature == temperature and last.humidity == humidity:
         exit()
 
+    if temperature < -100 or humidity < 0:
+        exit()
+
     current = ClimateData.create(
         timestamp=datetime.datetime.now(),
         temperature=temperature,
